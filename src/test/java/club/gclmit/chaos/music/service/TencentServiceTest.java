@@ -27,4 +27,10 @@ public class TencentServiceTest {
         Pic pic = tencentMusicService.getPic("121577504");
         System.out.println(pic);
     }
+
+    @Test
+    public void lyricTest(){
+        String lrc = tencentMusicService.getLrc("121577504");
+        System.out.println(lrc);
+    }
 }

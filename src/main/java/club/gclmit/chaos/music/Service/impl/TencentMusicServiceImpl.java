@@ -104,7 +104,9 @@ public class TencentMusicServiceImpl implements TencentMusicService {
         String result = request(url,TencentAPI.SEARCH.getMethod());
         String lyric = JSONObject.parseObject(result).getString("lyric");
 
-        return Base64.getDecoder().decode(lyric).toString();
+        log.info("响应:{}\nlyric:{}",result,lyric);
+
+        return new String(Base64.getDecoder().decode(lyric));
     }
 
     @Override
