@@ -1,0 +1,20 @@
+<command-lable-xwl78-qq-music>
+    <cmd value="1057" verson="729">
+        <result retcode="0">0</result>
+        <reason/>
+        <num>0</num>
+        <url seq="0" musicid="121577504" songtype="0" scode="0" acode="0">
+            <singer> <![CDATA[]]> </singer>
+            <album> <![CDATA[]]> </album>
+            <s_l>http://y.gtimg.cn/music/photo_new/T001R150x150M0000020GatO16MYW5.jpg</s_l>
+            <s_m>http://y.gtimg.cn/music/photo_new/T001R90x90M0000020GatO16MYW5.jpg</s_m>
+            <s_s>http://y.gtimg.cn/music/photo_new/T001R68x68M0000020GatO16MYW5.jpg</s_s>
+            <s_sl>http://y.gtimg.cn/music/photo_new/T001R500x500M0000020GatO16MYW5.jpg</s_sl>
+            <a_l>http://y.gtimg.cn/music/photo_new/T002R150x150M000001ZaCQY2OxVMg.jpg</a_l>
+            <a_m>http://y.gtimg.cn/music/photo_new/T002R90x90M000001ZaCQY2OxVMg.jpg</a_m>
+            <a_s>http://y.gtimg.cn/music/photo_new/T002R68x68M000001ZaCQY2OxVMg.jpg</a_s>
+            <a_sl>http://y.gtimg.cn/music/photo_new/T002R500x500M000001ZaCQY2OxVMg.jpg</a_sl>
+        </url>
+    </cmd>
+</command-lable-xwl78-qq-music>
+

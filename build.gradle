@@ -1,0 +1,46 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.1.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'java'
+}
+
+group = 'club.gclmit'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenLocal()
+    maven(){
+        url 'https://maven.gclmit.club/repository/maven-public/'
+    }
+    mavenCentral()
+}
+
+dependencies {
+//    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+//    runtimeOnly 'mysql:mysql-connector-java'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+
+    compile group: 'com.alibaba', name: 'fastjson', version: '1.2.58'
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.12.1'
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.10'
+    compile group: 'dom4j', name: 'dom4j', version: '1.6.1'
+    compile group: 'jaxen', name: 'jaxen', version: '1.1.6'
+    compile group: 'com.google.guava', name: 'guava', version: '28.1-jre'
+
+}
+
+test {
+    useJUnitPlatform()
+}
