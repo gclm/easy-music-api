@@ -1,11 +1,13 @@
 package club.gclmit.chaos.music.service;
 
-import club.gclmit.chaos.music.Service.TencentMusicService;
 import club.gclmit.chaos.music.pojo.Pic;
+import club.gclmit.chaos.music.pojo.Song;
 import org.dom4j.DocumentException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
 
 /**
  * <p>
@@ -32,5 +34,19 @@ public class TencentServiceTest {
     public void lyricTest(){
         String lrc = tencentMusicService.getLrc("121577504");
         System.out.println(lrc);
+    }
+
+    @Test
+    public void songInfoTest(){
+        Song songInfo = tencentMusicService.getSongInfo("000a2bMl33mXkU", "242254267");
+        System.out.println(songInfo);
+    }
+
+    @Test
+    public void searchList(){
+        List<Song>  song = tencentMusicService.search("爱");
+        for (Song song1 : song){
+            System.out.println(song1);
+        }
     }
 }

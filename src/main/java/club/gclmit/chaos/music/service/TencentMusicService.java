@@ -1,4 +1,4 @@
-package club.gclmit.chaos.music.Service;
+package club.gclmit.chaos.music.service;
 
 import club.gclmit.chaos.music.pojo.Pic;
 import club.gclmit.chaos.music.pojo.Song;
@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * <p>
- * 音乐服务抽象类
+ * 音乐服务接口
  * </p>
  *
  * @author: gclm
@@ -38,7 +38,7 @@ public interface TencentMusicService {
     /**
      * 获取歌曲详情
      */
-    public String getSongInfo(String songMid,String songId);
+    public Song getSongInfo(String songMid, String songId);
 
     /**
      * 获取歌曲
@@ -48,5 +48,5 @@ public interface TencentMusicService {
     /**
      * 搜索列表
      */
-    public List<Song> searchList(String keyword);
+    public List<Song> search(String keyword);
 }

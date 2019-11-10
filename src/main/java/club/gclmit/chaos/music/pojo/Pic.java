@@ -1,6 +1,4 @@
 package club.gclmit.chaos.music.pojo;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -13,8 +11,12 @@ import lombok.Data;
  * @version: V1.0
  */
 @Data
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class Pic {
+
+    /**
+     * Id
+     */
+    private String id;
 
     /**
      * 特大
@@ -36,4 +38,10 @@ public class Pic {
      */
     private String small;
 
+    public Pic(String extraLarge, String large, String medium, String small) {
+        this.extraLarge = extraLarge;
+        this.large = large;
+        this.medium = medium;
+        this.small = small;
+    }
 }

@@ -14,10 +14,15 @@ import lombok.Data;
 @Data
 public class Song {
 
+    /**
+     * 数据库自增
+     */
+    private String id;
+
      /**
       * 歌曲 Id
       */
-    private Integer songId;
+    private String songId;
 
     /**
      * 歌曲 mid
@@ -32,7 +37,12 @@ public class Song {
     /**
      * 专辑 id
      */
-    private String albummId;
+    private String albumId;
+
+    /**
+     * 专辑 Mid
+     */
+    private String albumMid;
 
     /**
      * 专辑名字
@@ -59,4 +69,13 @@ public class Song {
      */
     private String url;
 
+    public Song(String songId, String songMid, String name, String albumId, String albumMid, String albumName, String singer) {
+        this.songId = songId;
+        this.songMid = songMid;
+        this.name = name;
+        this.albumId = albumId;
+        this.albumMid = albumMid;
+        this.albumName = albumName;
+        this.singer = singer;
+    }
 }
