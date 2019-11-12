@@ -1,12 +1,12 @@
 package club.gclmit.chaos.music.service.impl;
 
+import club.gclmit.chaos.music.constants.TopList;
 import club.gclmit.chaos.music.service.TencentMusicService;
 import club.gclmit.chaos.music.api.TencentAPI;
 import club.gclmit.chaos.music.pojo.Pic;
 import club.gclmit.chaos.music.pojo.Song;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.sun.jndi.toolkit.url.Uri;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -17,13 +17,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.util.UriTemplate;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -60,6 +60,17 @@ public class TencentMusicServiceImpl implements TencentMusicService {
         httpEntity = new HttpEntity(header);
     }
 
+    /**
+     * <p>
+     *  获取图片列表
+     * </p>
+     *
+     * @author gclm
+     * @param: songId
+     * @date 2019/11/10 15:16
+     * @return: club.gclmit.chaos.music.pojo.Pic
+     * @throws
+     */
     @Override
     public Pic getPic(String songId) throws DocumentException {
         String url = String.format(TencentAPI.PIC_LIST.getUrl(),songId);
@@ -85,7 +96,12 @@ public class TencentMusicServiceImpl implements TencentMusicService {
     }
 
     @Override
-    public List<Song> getSongList(String type) {
+    public List<Song> getTopList(TopList type) {
+        return null;
+    }
+
+    @Override
+    public List<Song> getPlayList(String id) {
         return null;
     }
 
@@ -134,30 +150,32 @@ public class TencentMusicServiceImpl implements TencentMusicService {
          */
         String param = "{\"comm\":{\"ct\":24,\"cv\":0},\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"param\":{\"song_type\":0,\"song_mid\":\"%s\",\"song_id\":%s},\"module\":\"music.pf_song_detail_svr\"}}";
         String data = String.format(param,songMid,songId);
-        URI uri = new UriTemplate(TencentAPI.SONG_INFO.getUrl()).expand(data);
+        URI uri = getUri(TencentAPI.SONG_INFO.getUrl(),data);
 
         String result = request(uri, TencentAPI.SONG_INFO.getMethod());
 
-        /**
-         * 解析处理响应的JOSN 数据
-         */
-        JSONObject track_info = JSONObject.parseObject(result).getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info");
-        JSONObject album = track_info.getJSONObject("album");
-        JSONArray singers = track_info.getJSONArray("singer");
-
-
-        /**
-         * 拼装 Song 对象
-         */
-        String singer = getSinger(singers);
-        String name = track_info.getString("name");
-        String albumId = album.getString("id");
-        String albumMid = album.getString("mid");
-        String albumName = album.getString("name");
-
-        return new Song(songId,songMid,name,albumId,albumMid,albumName,singer);
+        return songInfoBuilder(result);
     }
 
+    /**
+     * <p>
+     *  获取歌曲信息
+     * </p>
+     *
+     * @author gclm
+     * @param: songMid
+     * @date 2019/11/12 8:50
+     * @return: club.gclmit.chaos.music.pojo.Song
+     * @throws
+     */
+    @Override
+    public Song getSongInfo(String songMid) {
+        String param = "{\"comm\":{\"ct\":24,\"cv\":0},\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"param\":{\"song_type\":0,\"song_mid\":\"%s\"},\"module\":\"music.pf_song_detail_svr\"}}";
+        String data = String.format(param, songMid);
+        URI uri = getUri(TencentAPI.SONG_INFO.getUrl(), data);
+        String result = request(uri, TencentAPI.SONG_INFO.getMethod());
+        return songInfoBuilder(result);
+    }
 
 
     @Override
@@ -203,6 +221,48 @@ public class TencentMusicServiceImpl implements TencentMusicService {
         return songList;
     }
 
+    @Override
+    public Map<String, String> userHeadImg(String number) {
+        String param = "{\"comm\":{\"ct\":24,\"cv\":0},\"vip\":{\"module\":\"userInfo.VipQueryServer\",\"method\":\"SRFVipQuery_V2\",\"param\":{\"uin_list\":[\"%s\"]}},\"base\":{\"module\":\"userInfo.BaseUserInfoServer\",\"method\":\"get_user_baseinfo_v2\",\"param\":{\"vec_uin\":[\"%s\"]}}}";
+        return null;
+    }
+
+    /**
+     * <p>
+     * 为不同的接口扩建通用的数据拼接方法
+     * </p>
+     *
+     * @summary httpdoc 方法注解
+     * @author gclm
+     * @param: result
+     * @date 2019/11/12 8:47
+     * @return: club.gclmit.chaos.music.pojo.Song
+     * @throws
+     */
+    private Song songInfoBuilder(String result) {
+
+        /**
+         * 解析处理响应的JOSN 数据
+         */
+        JSONObject track_info = JSONObject.parseObject(result).getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info");
+        JSONObject album = track_info.getJSONObject("album");
+        JSONArray singers = track_info.getJSONArray("singer");
+
+
+        /**
+         * 拼装 Song 对象
+         */
+        String songId = track_info.getString("id");
+        String songMid = track_info.getString("mid");
+        String singer = getSinger(singers);
+        String name = track_info.getString("name");
+        String albumId = album.getString("id");
+        String albumMid = album.getString("mid");
+        String albumName = album.getString("name");
+
+        return new Song(songId,songMid,name,albumId,albumMid,albumName,singer);
+    }
+
     /**
      * <p>
      *  获取歌手名字
@@ -220,6 +280,22 @@ public class TencentMusicServiceImpl implements TencentMusicService {
             sb.append(singers.getJSONObject(i).getString("name")).append("/");
         }
         return sb.substring(0, sb.length() - 1);
+    }
+
+    /**
+     * <p>
+     *  URL 编码器
+     * </p>
+     *
+     * @author gclm
+     * @param: url
+     * @param: data
+     * @date 2019/11/12 8:40
+     * @return: java.net.URI
+     * @throws
+     */
+    private URI getUri(String url,String data) {
+        return new UriTemplate(url).expand(data);
     }
 
     /**

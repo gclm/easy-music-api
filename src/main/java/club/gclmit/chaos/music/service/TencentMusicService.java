@@ -1,10 +1,12 @@
 package club.gclmit.chaos.music.service;
 
+import club.gclmit.chaos.music.constants.TopList;
 import club.gclmit.chaos.music.pojo.Pic;
 import club.gclmit.chaos.music.pojo.Song;
 import org.dom4j.DocumentException;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -23,12 +25,14 @@ public interface TencentMusicService {
     public  Pic getPic(String songId) throws DocumentException;
 
     /**
-     * 获取音乐列表
-     * 1. 获取当前榜单
-     * 2. 获取歌单
-     * 3. 获取专辑
+     * 获取排行榜
      */
-    public  List<Song> getSongList(String type);
+    public  List<Song> getTopList(TopList type);
+
+    /**
+     * 获取歌单
+     */
+    public List<Song> getPlayList(String id);
 
     /**
      * 获取歌词
@@ -41,6 +45,11 @@ public interface TencentMusicService {
     public Song getSongInfo(String songMid, String songId);
 
     /**
+     * 获取歌曲详情
+     */
+    public Song getSongInfo(String songMid);
+
+    /**
      * 获取歌曲
      */
     public String getSong(String songMid);
@@ -49,4 +58,9 @@ public interface TencentMusicService {
      * 搜索列表
      */
     public List<Song> search(String keyword);
+
+    /**
+     * 用户头像
+     */
+    public Map<String,String> userHeadImg(String number);
 }

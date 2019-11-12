@@ -38,8 +38,11 @@ public class TencentServiceTest {
 
     @Test
     public void songInfoTest(){
-        Song songInfo = tencentMusicService.getSongInfo("000a2bMl33mXkU", "242254267");
+        Song songInfo = tencentMusicService.getSongInfo("002COmzJ0SPZMl", "244499239");
         System.out.println(songInfo);
+
+        Song song = tencentMusicService.getSongInfo("002COmzJ0SPZMl");
+        System.out.println(song);
     }
 
     @Test
@@ -49,4 +52,6 @@ public class TencentServiceTest {
             System.out.println(song1);
         }
     }
+
+
 }
