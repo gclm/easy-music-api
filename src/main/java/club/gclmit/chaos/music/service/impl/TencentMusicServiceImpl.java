@@ -20,10 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriTemplate;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -221,10 +218,29 @@ public class TencentMusicServiceImpl implements TencentMusicService {
         return songList;
     }
 
+    /**
+     * <p>
+     *  获取用户头像和昵称
+     * </p>
+     *
+     * @author gclm
+     * @param: number
+     * @date 2019/11/12 8:59
+     * @return: java.util.Map<java.lang.String,java.lang.String>
+     * @throws
+     */
     @Override
     public Map<String, String> userHeadImg(String number) {
         String param = "{\"comm\":{\"ct\":24,\"cv\":0},\"vip\":{\"module\":\"userInfo.VipQueryServer\",\"method\":\"SRFVipQuery_V2\",\"param\":{\"uin_list\":[\"%s\"]}},\"base\":{\"module\":\"userInfo.BaseUserInfoServer\",\"method\":\"get_user_baseinfo_v2\",\"param\":{\"vec_uin\":[\"%s\"]}}}";
-        return null;
+        String data = String.format(param, number, number);
+
+        String result = request(getUri(TencentAPI.USER_HEAD_IMG.getUrl(), data), TencentAPI.USER_HEAD_IMG.getMethod());
+        JSONObject qq = JSONObject.parseObject(result).getJSONObject("base").getJSONObject("data").getJSONObject("map_userinfo").getJSONObject(number);
+        Map<String,String> map = new HashMap<>();
+        map.put("uin",qq.getString("uin"));
+        map.put("nickname",qq.getString("nick"));
+        map.put("headUrl",qq.getString("headurl"));
+        return map;
     }
 
     /**
@@ -232,7 +248,6 @@ public class TencentMusicServiceImpl implements TencentMusicService {
      * 为不同的接口扩建通用的数据拼接方法
      * </p>
      *
-     * @summary httpdoc 方法注解
      * @author gclm
      * @param: result
      * @date 2019/11/12 8:47

@@ -2,12 +2,14 @@ package club.gclmit.chaos.music.service;
 
 import club.gclmit.chaos.music.pojo.Pic;
 import club.gclmit.chaos.music.pojo.Song;
+import com.alibaba.fastjson.JSON;
 import org.dom4j.DocumentException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -53,5 +55,9 @@ public class TencentServiceTest {
         }
     }
 
-
+    @Test
+    public void userHeaderImgTest(){
+        Map<String, String> stringStringMap = tencentMusicService.userHeadImg("1719982754");
+        System.out.println(JSON.toJSON(stringStringMap));
+    }
 }
