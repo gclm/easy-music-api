@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="club.gclmit.chaos.music.mapper.SongMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="club.gclmit.chaos.music.model.pojo.Song">
+        <id column="id" property="id" />
+        <result column="song_id" property="songId" />
+        <result column="song_mid" property="songMid" />
+        <result column="name" property="name" />
+        <result column="album_id" property="albumId" />
+        <result column="album_mid" property="albumMid" />
+        <result column="album_name" property="albumName" />
+        <result column="singer" property="singer" />
+        <result column="pic" property="pic" />
+        <result column="lrc" property="lrc" />
+        <result column="url" property="url" />
+    </resultMap>
+</mapper>

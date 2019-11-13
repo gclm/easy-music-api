@@ -1,7 +1,8 @@
 package club.gclmit.chaos.music.service;
 
-import club.gclmit.chaos.music.pojo.Pic;
-import club.gclmit.chaos.music.pojo.Song;
+
+import club.gclmit.chaos.music.model.pojo.Pic;
+import club.gclmit.chaos.music.model.pojo.Song;
 import com.alibaba.fastjson.JSON;
 import org.dom4j.DocumentException;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,7 @@ import java.util.Map;
 
 /**
  * <p>
- * TODO
+ * 腾讯音乐服务测试
  * </p>
  *
  * @author: gclm

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="club.gclmit.chaos.music.mapper.SongQualityMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="club.gclmit.chaos.music.model.pojo.SongQuality">
+        <id column="id" property="id" />
+        <result column="song_mid" property="songMid" />
+        <result column="m4a" property="m4a" />
+        <result column="ogg" property="ogg" />
+        <result column="mp3" property="mp3" />
+        <result column="largeMp3" property="largeMp3" />
+        <result column="ape" property="ape" />
+        <result column="flac" property="flac" />
+    </resultMap>
+</mapper>

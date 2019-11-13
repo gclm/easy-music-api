@@ -1,8 +1,8 @@
 package club.gclmit.chaos.music.service;
 
-import club.gclmit.chaos.music.constants.TopList;
-import club.gclmit.chaos.music.pojo.Pic;
-import club.gclmit.chaos.music.pojo.Song;
+import club.gclmit.chaos.music.model.constants.TopList;
+import club.gclmit.chaos.music.model.pojo.Pic;
+import club.gclmit.chaos.music.model.pojo.Song;
 import org.dom4j.DocumentException;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public interface TencentMusicService {
     /**
      * 获取图片列表
      */
-    public  Pic getPic(String songId) throws DocumentException;
+    public Pic getPic(String songId) throws DocumentException;
 
     /**
      * 获取排行榜

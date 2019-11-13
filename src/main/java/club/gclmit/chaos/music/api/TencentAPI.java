@@ -23,7 +23,8 @@ public enum  TencentAPI {
     SONG_INFO("https://u.y.qq.com/cgi-bin/musicu.fcg?g_tk=5381&format=json&inCharset=utf8&outCharset=utf-8&data={data}",HttpMethod.GET),
     SINGER_LIST("https://u.y.qq.com/cgi-bin/musicu.fcg?format=json&inCharset=utf-8&outCharset=utf-8&data=%s",HttpMethod.GET),
     PIC_LIST("https://c.y.qq.com/photocgi/fcgi-bin/qm_search_photo.fcg?songid=%s",HttpMethod.GET),
-    LYRIC("https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_yqq.fcg?musicid=%s&g_tk=5381&format=json&inCharset=utf8&outCharset=utf-8",HttpMethod.GET);
+    LYRIC_ID("https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_yqq.fcg?musicid=%s&g_tk=5381&format=json&inCharset=utf8&outCharset=utf-8",HttpMethod.GET),
+    LYRIC_MID("https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg?songmid=%s&g_tk=5381&format=json&inCharset=utf8&outCharset=utf-8",HttpMethod.GET);
 
      /**
       * API URL

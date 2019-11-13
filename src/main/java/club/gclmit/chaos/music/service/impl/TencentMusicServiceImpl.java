@@ -1,10 +1,10 @@
 package club.gclmit.chaos.music.service.impl;
 
-import club.gclmit.chaos.music.constants.TopList;
+import club.gclmit.chaos.music.model.constants.TopList;
+import club.gclmit.chaos.music.model.pojo.Pic;
+import club.gclmit.chaos.music.model.pojo.Song;
 import club.gclmit.chaos.music.service.TencentMusicService;
 import club.gclmit.chaos.music.api.TencentAPI;
-import club.gclmit.chaos.music.pojo.Pic;
-import club.gclmit.chaos.music.pojo.Song;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
@@ -89,7 +89,7 @@ public class TencentMusicServiceImpl implements TencentMusicService {
         String medium = document.selectSingleNode("//url/a_m").getText();
         String small = document.selectSingleNode("//url/a_s").getText();
 
-        return new Pic(sl,large, medium, small);
+        return new Pic(songId,sl,large, medium, small);
     }
 
     @Override
@@ -102,25 +102,33 @@ public class TencentMusicServiceImpl implements TencentMusicService {
         return null;
     }
 
+    @Override
+    public String getSong(String songMid) {
+        return null;
+    }
+
     /**
      * <p>
      *  获取歌词
      * </p>
      *
      * @author gclm
-     * @param: songId
+     * @param: songId/songMid
      * @date 2019/11/10 11:38
      * @return: java.lang.String
      * @throws
      */
     @Override
     public String getLrc(String songId) {
-        String url = String.format(TencentAPI.LYRIC.getUrl(), songId);
+//        if () {
+//
+//        }
+        String url = String.format(TencentAPI.LYRIC_ID.getUrl(), songId);
 
         /**
          * 获取响应结果进行JSON 处理，因为响应的为 Base64,所以需要进行解码
          */
-        String result = request(url,TencentAPI.SEARCH.getMethod());
+        String result = request(url,TencentAPI.LYRIC_ID.getMethod());
         String lyric = JSONObject.parseObject(result).getString("lyric");
 
         log.info("响应:{}\nlyric:{}",result,lyric);
@@ -172,12 +180,6 @@ public class TencentMusicServiceImpl implements TencentMusicService {
         URI uri = getUri(TencentAPI.SONG_INFO.getUrl(), data);
         String result = request(uri, TencentAPI.SONG_INFO.getMethod());
         return songInfoBuilder(result);
-    }
-
-
-    @Override
-    public String getSong(String songMid) {
-        return null;
     }
 
     /**
@@ -327,7 +329,7 @@ public class TencentMusicServiceImpl implements TencentMusicService {
      */
     private String request(String url, HttpMethod httpMethod){
 
-       return restTemplate.exchange(url, httpMethod, httpEntity, String.class).getBody();
+        return restTemplate.exchange(url, httpMethod, httpEntity, String.class).getBody();
     }
 
     /**

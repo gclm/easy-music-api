@@ -1,4 +1,4 @@
-package club.gclmit.chaos.music.constants;
+package club.gclmit.chaos.music.model.constants;
 
 /**
  * <p>
