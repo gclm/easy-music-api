@@ -15,7 +15,6 @@ import org.springframework.http.HttpMethod;
 @Getter
 public enum  TencentAPI {
 
-    MUSIC_LIST_DATE("https://u.y.qq.com/cgi-bin/musicu.fcg",HttpMethod.POST),
     MUSIC_LIST("https://u.y.qq.com/cgi-bin/musicu.fcg",HttpMethod.POST),
     VKEY("https://u.y.qq.com/cgi-bin/musicu.fcg?g_tk=5381&format=json&inCharset=utf8&outCharset=utf-8&data=%s",HttpMethod.GET),
     SEARCH("https://c.y.qq.com/soso/fcgi-bin/client_search_cp?g_tk=806131863&format=json&inCharset=utf8&outCharset=utf-8&p=1&n=20&w=%s",HttpMethod.GET),

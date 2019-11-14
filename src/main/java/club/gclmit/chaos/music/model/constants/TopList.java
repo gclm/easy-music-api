@@ -10,11 +10,26 @@ package club.gclmit.chaos.music.model.constants;
  * @version: V1.0
  */
 public enum TopList {
+
+    /**
+     *  流行指数榜
+     */
     TOPLIst4(4),
+
+    /**
+     *  热歌榜
+     */
     TOPLIst26(26),
+
+    /**
+     * 新歌榜
+     */
     TOPLIst27(27),
-    TOPLIst62(62),
-    MVTOPLIST(999);
+
+    /**
+     *  飙升榜
+     */
+    TOPLIst62(62);
 
     private Integer code;
 

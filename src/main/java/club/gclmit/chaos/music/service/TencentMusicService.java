@@ -27,7 +27,12 @@ public interface TencentMusicService {
     /**
      * 获取排行榜
      */
-    public  List<Song> getTopList(TopList type);
+    public  List<Song> getTopList(Integer type);
+
+    /**
+     *  获取榜单信息
+     */
+    public Map<String,String> getTopList();
 
     /**
      * 获取歌单

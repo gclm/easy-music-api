@@ -1,6 +1,5 @@
 package club.gclmit.chaos.music.service.impl;
 
-import club.gclmit.chaos.music.model.constants.TopList;
 import club.gclmit.chaos.music.model.pojo.Pic;
 import club.gclmit.chaos.music.model.pojo.Song;
 import club.gclmit.chaos.music.service.TencentMusicService;
@@ -20,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriTemplate;
 
 import java.net.URI;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -92,10 +92,23 @@ public class TencentMusicServiceImpl implements TencentMusicService {
         return new Pic(songId,sl,large, medium, small);
     }
 
+
     @Override
-    public List<Song> getTopList(TopList type) {
+    public List<Song> getTopList(Integer type){
         return null;
     }
+
+    @Override
+    public Map<String, String> getTopList() {
+        String data = "{\"req_0\":{\"module\":\"musicToplist.ToplistInfoServer\",\"method\":\"GetAll\",\"param\":{}},\"comm\":{\"g_tk\":5381,\"uin\":0,\"format\":\"json\",\"ct\":20,\"cv\":1724}}";
+
+        URI uri = getUri(TencentAPI.MUSIC_LIST.getUrl(),data);
+
+        String result = request(uri, TencentAPI.MUSIC_LIST.getMethod());
+
+        return null;
+    }
+
 
     @Override
     public List<Song> getPlayList(String id) {
@@ -120,9 +133,7 @@ public class TencentMusicServiceImpl implements TencentMusicService {
      */
     @Override
     public String getLrc(String songId) {
-//        if () {
-//
-//        }
+
         String url = String.format(TencentAPI.LYRIC_ID.getUrl(), songId);
 
         /**
