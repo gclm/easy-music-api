@@ -3,6 +3,7 @@ package club.gclmit.chaos.music.service;
 
 import club.gclmit.chaos.music.model.pojo.Pic;
 import club.gclmit.chaos.music.model.pojo.Song;
+import club.gclmit.chaos.music.model.pojo.TopList;
 import com.alibaba.fastjson.JSON;
 import org.dom4j.DocumentException;
 import org.junit.jupiter.api.Test;
@@ -60,5 +61,14 @@ public class TencentServiceTest {
     public void userHeaderImgTest(){
         Map<String, String> stringStringMap = tencentMusicService.userHeadImg("1719982754");
         System.out.println(JSON.toJSON(stringStringMap));
+    }
+
+    @Test
+    public void getTopListTest(){
+        List<TopList> topLists = tencentMusicService.getTopList();
+
+        for (TopList top: topLists) {
+            System.out.println(top);
+        }
     }
 }

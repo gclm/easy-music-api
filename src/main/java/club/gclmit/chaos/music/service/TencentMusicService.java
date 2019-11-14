@@ -1,8 +1,8 @@
 package club.gclmit.chaos.music.service;
 
-import club.gclmit.chaos.music.model.constants.TopList;
 import club.gclmit.chaos.music.model.pojo.Pic;
 import club.gclmit.chaos.music.model.pojo.Song;
+import club.gclmit.chaos.music.model.pojo.TopList;
 import org.dom4j.DocumentException;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public interface TencentMusicService {
     /**
      *  获取榜单信息
      */
-    public Map<String,String> getTopList();
+    public List<TopList> getTopList();
 
     /**
      * 获取歌单

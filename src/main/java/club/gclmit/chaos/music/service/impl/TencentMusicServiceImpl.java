@@ -2,6 +2,7 @@ package club.gclmit.chaos.music.service.impl;
 
 import club.gclmit.chaos.music.model.pojo.Pic;
 import club.gclmit.chaos.music.model.pojo.Song;
+import club.gclmit.chaos.music.model.pojo.TopList;
 import club.gclmit.chaos.music.service.TencentMusicService;
 import club.gclmit.chaos.music.api.TencentAPI;
 import com.alibaba.fastjson.JSONArray;
@@ -99,14 +100,35 @@ public class TencentMusicServiceImpl implements TencentMusicService {
     }
 
     @Override
-    public Map<String, String> getTopList() {
+    public List<TopList> getTopList() {
+        /**
+         *  重新封装 HttpEntity
+         */
         String data = "{\"req_0\":{\"module\":\"musicToplist.ToplistInfoServer\",\"method\":\"GetAll\",\"param\":{}},\"comm\":{\"g_tk\":5381,\"uin\":0,\"format\":\"json\",\"ct\":20,\"cv\":1724}}";
+        httpEntity = new HttpEntity(data,httpEntity.getHeaders());
 
-        URI uri = getUri(TencentAPI.MUSIC_LIST.getUrl(),data);
+        String result = request(TencentAPI.MUSIC_LIST);
+        JSONArray group = JSONObject.parseObject(result).getJSONObject("req_0").getJSONObject("data").getJSONArray("group");
 
-        String result = request(uri, TencentAPI.MUSIC_LIST.getMethod());
+        List<TopList> topList = new ArrayList<>();
 
-        return null;
+        for (int i = 0; i < group.size(); i++) {
+            JSONArray toplist = group.getJSONObject(i).getJSONArray("toplist");
+            for (int j = 0; j < toplist.size(); j++) {
+                JSONObject jsonObject = toplist.getJSONObject(j);
+                String topId = jsonObject.getString("topId");
+                String title = jsonObject.getString("titleShare");
+                String intro = jsonObject.getString("intro");
+                String updateTime = jsonObject.getString("updateTime");
+                String headPicUrl = jsonObject.getString("headPicUrl");
+                String frontPicUrl = jsonObject.getString("frontPicUrl");
+                String mbFrontPicUrl = jsonObject.getString("mbFrontPicUrl");
+                String mbHeadPicUrl = jsonObject.getString("mbHeadPicUrl");
+                topList.add(new TopList(topId,title,intro,updateTime,headPicUrl,frontPicUrl,mbHeadPicUrl,mbHeadPicUrl));
+            }
+        }
+
+        return topList;
     }
 
 
@@ -339,10 +361,22 @@ public class TencentMusicServiceImpl implements TencentMusicService {
      * @throws
      */
     private String request(String url, HttpMethod httpMethod){
-
         return restTemplate.exchange(url, httpMethod, httpEntity, String.class).getBody();
     }
 
+    /**
+     * <p>
+     *  restTemplate 封装
+     * </p>
+     *
+     * @author gclm
+     * @param: tencentAPI
+     * @date 2019/11/14 21:12
+     * @return: java.lang.String
+     */
+    private String request(TencentAPI tencentAPI){
+        return restTemplate.exchange(tencentAPI.getUrl(), tencentAPI.getMethod(), httpEntity, String.class).getBody();
+    }
     /**
      * <p>
      *  restTemplate 封装
