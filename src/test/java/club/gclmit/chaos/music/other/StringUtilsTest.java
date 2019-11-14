@@ -2,6 +2,9 @@ package club.gclmit.chaos.music.other;
 
 import club.gclmit.chaos.music.util.StringUtils;
 
+/**
+ * 测试方法
+ */
 public class StringUtilsTest {
 
     public static void main(String[] args) {
