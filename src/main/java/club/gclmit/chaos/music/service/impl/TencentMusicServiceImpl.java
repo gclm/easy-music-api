@@ -146,7 +146,7 @@ public class TencentMusicServiceImpl implements TencentMusicService {
 
         JSONObject jsonObject =  JSONObject.parseObject(response).getJSONObject("req_0").getJSONObject("data").getJSONArray("midurlinfo").getJSONObject(0);
 
-        String purl = jsonObject.getString("purl");
+        String purl = jsonObject.getString("vkey");
 
         log.info("purl 获取成功 {}",purl);
 
@@ -170,7 +170,7 @@ public class TencentMusicServiceImpl implements TencentMusicService {
         log.info("当前响应数据:{}",result);
 
         JSONObject jsonObject = JSONObject.parseObject(result).getJSONObject("queryvkey").getJSONObject("data").getJSONArray("midurlinfo").getJSONObject(1);
-        return jsonObject.getString("vkey");
+        return jsonObject.getString("purl");
     }
 
     @Override
@@ -184,7 +184,8 @@ public class TencentMusicServiceImpl implements TencentMusicService {
             "http://124.89.197.15/amobile.music.tc.qq.com/",
              "http://isure.stream.qqmusic.qq.com/",
                 "http://ws.stream.qqmusic.qq.com/",
-            "http://124.89.197.19/amobile.music.tc.qq.com/"
+            "http://183.240.120.28/amobile.music.tc.qq.com"
+//                http://183.240.120.28/amobile.music.tc.qq.com/M500000a2bMl33mXkU.mp3?vkey=01EBB9C855BF7BEC23A9478DD13C112926E93883BD1DD375F401A27E09B55036BD0283D4D6746B6C7F4636AB794594119B948A5A8B9E6128&guid=4393610020&uin=0&fromtag=66
         };
 
 //    选择不同音质
@@ -198,7 +199,7 @@ public class TencentMusicServiceImpl implements TencentMusicService {
             case "mgg":
                 return  String.format("%sO6M0%s.mgg?guid=CD2594E1E7AD35046B95E7E1482E074B&vkey=%s&uin=0&fromtag=77",prefix[1], songmid, vkey);
             case "128":
-                return  String.format("%sM500%s.mp3?guid=CD2594E1E7AD35046B95E7E1482E074B&vkey=%s&uin=0&fromtag=30",prefix[1], songmid, vkey);
+                return String.format("%sM500%s.mp3?vkey=%s&guid=%s&uin=0&fromtag=66",prefix[3],songmid,getPurl(songmid),getGuid());
             case "m4a":
                 return  String.format("%s%s",prefix[3], getPurl(songmid));
             default :

@@ -93,14 +93,14 @@ public class TencentServiceTest {
 
     @Test
     public void getMusicUrlTest(){
-        String songmid = "002COmzJ0SPZMl";
+        String songmid = "000a2bMl33mXkU";
 
 //        System.out.println("flac:\n" + tencentMusicService.getMusicUrl(songmid,"flac"));
 //        System.out.println("ape:\n" + tencentMusicService.getMusicUrl(songmid,"ape"));
 //        System.out.println("320:\n" + tencentMusicService.getMusicUrl(songmid,"320"));
 //        System.out.println("mgg:\n" + tencentMusicService.getMusicUrl(songmid,"mgg"));
-//        System.out.println("128:\n" + tencentMusicService.getMusicUrl(songmid,"128"));
-        System.out.println("m4a:\n" + tencentMusicService.getMusicUrl(songmid,"m4a"));
+        System.out.println("128:\n" + tencentMusicService.getMusicUrl(songmid,"128"));
+//        System.out.println("m4a:\n" + tencentMusicService.getMusicUrl(songmid,"m4a"));
 //        System.out.println("1280:\n" + tencentMusicService.getMusicUrl(songmid,"1280"));
     }
 
