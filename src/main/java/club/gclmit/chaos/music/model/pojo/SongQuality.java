@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+
+import lombok.*;
 import lombok.experimental.Accessors;
 /**
  * <p>
@@ -19,6 +19,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("music_song_quality")
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class SongQuality implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -30,39 +31,48 @@ public class SongQuality implements Serializable {
     private Long id;
 
     /**
+     * 歌曲 id
+     */
+    private String songId;
+
+    /**
      * 歌曲 mid
      */
     private String songMid;
 
     /**
-     * size_48m4a
-     */
-    private Integer m4a;
-
-    /**
      * size_192ogg
      */
-    private Integer ogg;
+    private String ogg;
 
     /**
      * M500 size_128mp3
      */
-    private Integer mp3;
+    private String size128;
 
     /**
      * M800 size_320mp3
      */
-    @TableField("largeMp3")
-    private Integer largeMp3;
+    private String size320;
 
     /**
      * size_ape
      */
-    private Integer ape;
+    private String ape;
 
     /**
      * flac
      */
-    private Integer flac;
+    private String flac;
 
+
+    public SongQuality(String songId, String songMid, String ogg, String size128, String size320, String ape, String flac) {
+        this.songId = songId;
+        this.songMid = songMid;
+        this.ogg = ogg;
+        this.size128 = size128;
+        this.size320 = size320;
+        this.ape = ape;
+        this.flac = flac;
+    }
 }

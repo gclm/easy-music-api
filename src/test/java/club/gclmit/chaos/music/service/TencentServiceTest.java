@@ -3,6 +3,7 @@ package club.gclmit.chaos.music.service;
 
 import club.gclmit.chaos.music.model.pojo.Pic;
 import club.gclmit.chaos.music.model.pojo.Song;
+import club.gclmit.chaos.music.model.pojo.SongQuality;
 import club.gclmit.chaos.music.model.pojo.TopList;
 import com.alibaba.fastjson.JSON;
 import org.dom4j.DocumentException;
@@ -71,4 +72,36 @@ public class TencentServiceTest {
             System.out.println(top);
         }
     }
+
+    @Test
+    public void getSongSizeTest() throws DocumentException {
+        SongQuality quality = tencentMusicService.getSongSize("244499239");
+        System.out.println(quality);
+    }
+
+    @Test
+    public void getVkeyTest(){
+        String purl = tencentMusicService.getPurl("002COmzJ0SPZMl");
+        System.out.println(purl);
+    }
+
+    @Test
+    public void getOggVkeyTest(){
+        String vkey = tencentMusicService.getOggVkey("000a2bMl33mXkU");
+        System.out.println(vkey);
+    }
+
+    @Test
+    public void getMusicUrlTest(){
+        String songmid = "002COmzJ0SPZMl";
+
+//        System.out.println("flac:\n" + tencentMusicService.getMusicUrl(songmid,"flac"));
+//        System.out.println("ape:\n" + tencentMusicService.getMusicUrl(songmid,"ape"));
+//        System.out.println("320:\n" + tencentMusicService.getMusicUrl(songmid,"320"));
+//        System.out.println("mgg:\n" + tencentMusicService.getMusicUrl(songmid,"mgg"));
+//        System.out.println("128:\n" + tencentMusicService.getMusicUrl(songmid,"128"));
+        System.out.println("m4a:\n" + tencentMusicService.getMusicUrl(songmid,"m4a"));
+//        System.out.println("1280:\n" + tencentMusicService.getMusicUrl(songmid,"1280"));
+    }
+
 }

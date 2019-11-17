@@ -2,18 +2,22 @@ package club.gclmit.chaos.music.service.impl;
 
 import club.gclmit.chaos.music.model.pojo.Pic;
 import club.gclmit.chaos.music.model.pojo.Song;
+import club.gclmit.chaos.music.model.pojo.SongQuality;
 import club.gclmit.chaos.music.model.pojo.TopList;
 import club.gclmit.chaos.music.service.TencentMusicService;
 import club.gclmit.chaos.music.api.TencentAPI;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -22,6 +26,7 @@ import org.springframework.web.util.UriTemplate;
 import java.net.URI;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * <p>
@@ -39,7 +44,7 @@ public class TencentMusicServiceImpl implements TencentMusicService {
     @Autowired
     private RestTemplate restTemplate;
 
-    private HttpEntity httpEntity = null;
+    private static MultiValueMap<String,Object> header = new LinkedMultiValueMap<>();
 
     /**
      * <p>
@@ -51,11 +56,9 @@ public class TencentMusicServiceImpl implements TencentMusicService {
      * @throws
      */
     public TencentMusicServiceImpl() {
-        MultiValueMap<String,Object> header = new LinkedMultiValueMap<>();
         header.add(HttpHeaders.USER_AGENT,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36");
         header.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         header.add(HttpHeaders.REFERER,"https://y.qq.com/");
-        httpEntity = new HttpEntity(header);
     }
 
     /**
@@ -105,7 +108,6 @@ public class TencentMusicServiceImpl implements TencentMusicService {
          *  重新封装 HttpEntity
          */
         String data = "{\"req_0\":{\"module\":\"musicToplist.ToplistInfoServer\",\"method\":\"GetAll\",\"param\":{}},\"comm\":{\"g_tk\":5381,\"uin\":0,\"format\":\"json\",\"ct\":20,\"cv\":1724}}";
-        httpEntity = new HttpEntity(data,httpEntity.getHeaders());
 
         String result = request(TencentAPI.MUSIC_LIST);
         JSONArray group = JSONObject.parseObject(result).getJSONObject("req_0").getJSONObject("data").getJSONArray("group");
@@ -131,6 +133,78 @@ public class TencentMusicServiceImpl implements TencentMusicService {
         return topList;
     }
 
+    @Override
+    public String getPurl(String songmid) {
+        String paramStr = "{\"req\":{\"module\":\"CDN.SrfCdnDispatchServer\",\"method\":\"GetCdnDispatch\",\"param\":{\"guid\":\"%s\",\"calltype\":0,\"userip\":\"\"}},\"req_0\":{\"module\":\"vkey.GetVkeyServer\",\"method\":\"CgiGetVkey\",\"param\":{\"guid\":\"%s\",\"songmid\":[\"%s\"],\"songtype\":[0],\"uin\":\"2461958018\",\"loginflag\":1,\"platform\":\"20\"}},\"comm\":{\"uin\":2461958018,\"format\":\"json\",\"ct\":24,\"cv\":0}}";
+        String data = String.format(paramStr, getGuid(), getGuid(), songmid);
+
+        URI uri = getUri(TencentAPI.VKEY.getUrl(), data);
+
+        String response = request(uri, TencentAPI.VKEY.getMethod());
+
+        log.info("vkey 响应结果："+response);
+
+        JSONObject jsonObject =  JSONObject.parseObject(response).getJSONObject("req_0").getJSONObject("data").getJSONArray("midurlinfo").getJSONObject(0);
+
+        String purl = jsonObject.getString("purl");
+
+        log.info("purl 获取成功 {}",purl);
+
+        return purl;
+    }
+
+
+    @Override
+    public String getOggVkey(String songmid) {
+        
+        /**
+         *  重新封装 HttpEntity
+         */
+        String param = "{\"comm\":{\"ct\":\"19\",\"cv\":\"1724\",\"patch\":\"118\",\"uin\":\"0\",\"wid\":\"0\"},\"queryvkey\":{\"method\":\"CgiGetEVkey\",\"module\":\"vkey.GetEVkeyServer\",\"param\":{\"checklimit\":0,\"ctx\":1,\"downloadfrom\":0,\"filename\":[\"O6M0003uw9dp2HcDl2.mgg\",\"O6M0%s.mgg\"],\"guid\":\"CD2594E1E7AD35046B95E7E1482E074B\",\"musicfile\":[\"O6M0003uw9dp2HcDl2.mgg\",\"O6M0%s.mgg\"],\"nettype\":\"\",\"referer\":\"y.qq.com\",\"scene\":0,\"songmid\":[\"003uw9dp2HcDl2\",\"%s\"],\"songtype\":[1,1],\"uin\":\"1719982754\"}}}";
+        String data = String.format(param,songmid,songmid,songmid);
+
+        header.add("Sign","UEdVWlBYQVNBSklLxxhaEBrBop6hydOMpFZ9ws266Qs=");
+        header.add("Mask","96OtzMQP8VLlr5fAY651eWzPKWkdKFeYCvbOMg6Oo/Nye3QGpHhsb6t2UsfYxDzTr5ELn5Vove7EPchPk3REKJpc5hLFsJIt");
+
+        String result = request(TencentAPI.MUSIC_LIST,new HttpEntity(data,header));
+        log.info("当前响应数据:{}",result);
+
+        JSONObject jsonObject = JSONObject.parseObject(result).getJSONObject("queryvkey").getJSONObject("data").getJSONArray("midurlinfo").getJSONObject(1);
+        return jsonObject.getString("vkey");
+    }
+
+    @Override
+    public String getMusicUrl(String songmid, String size) {
+        String vkey = getOggVkey(songmid);
+        Map<String, String> map = null;
+
+
+        String[] prefix= {
+            "http://124.89.197.14/amobile.music.tc.qq.com/",
+            "http://124.89.197.15/amobile.music.tc.qq.com/",
+             "http://isure.stream.qqmusic.qq.com/",
+                "http://ws.stream.qqmusic.qq.com/",
+            "http://124.89.197.19/amobile.music.tc.qq.com/"
+        };
+
+//    选择不同音质
+        switch (size) {
+            case "flac":
+                return  String.format("%sF000%s.flac?guid=CD2594E1E7AD35046B95E7E1482E074B&vkey=%s&uin=0&fromtag=53",prefix[1], songmid, vkey);
+            case "ape":
+                return  String.format("%sA000%s.ape?guid=CD2594E1E7AD35046B95E7E1482E074B&vkey=%s&uin=0&fromtag=8",prefix[1], songmid, vkey);
+            case "320":
+                return  String.format("%sM800%s.mp3?guid=CD2594E1E7AD35046B95E7E1482E074B&vkey=%s&uin=0&fromtag=30",prefix[1], songmid, vkey);
+            case "mgg":
+                return  String.format("%sO6M0%s.mgg?guid=CD2594E1E7AD35046B95E7E1482E074B&vkey=%s&uin=0&fromtag=77",prefix[1], songmid, vkey);
+            case "128":
+                return  String.format("%sM500%s.mp3?guid=CD2594E1E7AD35046B95E7E1482E074B&vkey=%s&uin=0&fromtag=30",prefix[1], songmid, vkey);
+            case "m4a":
+                return  String.format("%s%s",prefix[3], getPurl(songmid));
+            default :
+                return  String.format("%s%s",prefix[3], getPurl(songmid));
+        }
+    }
 
     @Override
     public List<Song> getPlayList(String id) {
@@ -278,6 +352,35 @@ public class TencentMusicServiceImpl implements TencentMusicService {
         return map;
     }
 
+    @Override
+    public SongQuality getSongSize(String songId) throws DocumentException {
+        String url = String.format(TencentAPI.SONG_SIZE.getUrl(), songId);
+        String result = request(url, TencentAPI.SONG_SIZE.getMethod());
+
+        if (StringUtils.isEmpty(result)) {
+            return new SongQuality();
+        }
+
+        /**
+         *  解析 Dom，获取当前Node 内容
+         */
+        result = StringUtils.substringBetween(result,"<!--", "-->");
+        Document xml = DocumentHelper.parseText(result);
+        Element element = (Element) xml.selectSingleNode("//qqcmd/content");
+
+//        log.info("当前Node 节点数据:{}",element.asXML());
+
+        String musicid = element.attributeValue("musicid");
+        String mid = element.attributeValue("strMediaMid");
+        String size128 = element.attributeValue("size128");
+        String size320 = element.attributeValue("size320");
+        String sizeape = element.attributeValue("sizeape");
+        String sizeflac = element.attributeValue("sizeflac");
+        String sizeogg =  element.attributeValue("sizeogg");
+
+        return new SongQuality(musicid,mid,sizeogg,size128,size320,sizeape,sizeflac);
+    }
+
     /**
      * <p>
      * 为不同的接口扩建通用的数据拼接方法
@@ -361,7 +464,7 @@ public class TencentMusicServiceImpl implements TencentMusicService {
      * @throws
      */
     private String request(String url, HttpMethod httpMethod){
-        return restTemplate.exchange(url, httpMethod, httpEntity, String.class).getBody();
+        return restTemplate.exchange(url, httpMethod, getHttpEntity(), String.class).getBody();
     }
 
     /**
@@ -375,8 +478,13 @@ public class TencentMusicServiceImpl implements TencentMusicService {
      * @return: java.lang.String
      */
     private String request(TencentAPI tencentAPI){
+        return restTemplate.exchange(tencentAPI.getUrl(), tencentAPI.getMethod(), getHttpEntity(), String.class).getBody();
+    }
+
+    private String request(TencentAPI tencentAPI,HttpEntity httpEntity){
         return restTemplate.exchange(tencentAPI.getUrl(), tencentAPI.getMethod(), httpEntity, String.class).getBody();
     }
+
     /**
      * <p>
      *  restTemplate 封装
@@ -390,7 +498,29 @@ public class TencentMusicServiceImpl implements TencentMusicService {
      * @throws
      */
     private String request(URI url, HttpMethod httpMethod){
+        return restTemplate.exchange(url, httpMethod, getHttpEntity(), String.class).getBody();
+    }
 
-        return restTemplate.exchange(url, httpMethod, httpEntity, String.class).getBody();
+    /**
+     *   QQ音乐 获取 10位随机数
+     * @return
+     */
+    private Long getGuid() {
+        long min = (long) Math.pow(10, 9);
+        return ThreadLocalRandom.current().nextLong(min, min * 10);
+    }
+
+    /**
+     * <p>
+     *  httpEntity 封装
+     * </p>
+     *
+     * @author gclm
+     * @date 2019/11/16 22:29
+     * @return: org.springframework.http.HttpEntity
+     * @throws
+     */
+    private HttpEntity getHttpEntity(){
+        return new HttpEntity(header);
     }
 }

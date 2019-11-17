@@ -44,6 +44,7 @@ dependencies {
     compile group: 'dom4j', name: 'dom4j', version: '1.6.1'
     compile group: 'jaxen', name: 'jaxen', version: '1.1.6'
     compile group: 'com.google.guava', name: 'guava', version: '28.1-jre'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
 }
 
 test {

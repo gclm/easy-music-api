@@ -20,6 +20,37 @@ import java.io.InputStream;
 public class XmlTest {
 
     public static void main(String[] args) throws DocumentException, FileNotFoundException {
+//        picTest();
+
+           String xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+                   "\n" +
+                   "<command-lable-xwl78-qq-music> \n" +
+                   "  <cmd value=\"1015\" verson=\"7\"> \n" +
+                   "    <result recode=\"0\" errstring=\"\" broadcast=\"1\"/>  \n" +
+                   "    <qq uin=\"0\"/>  \n" +
+                   "    <qqcmd ishold=\"1\"> \n" +
+                   "      <content type=\"file\" mime=\"file\" musicid=\"244499239\" songtype=\"0\" hasrate=\"23\" hq=\"0\" isonly=\"1\" protect=\"0\" action=\"0\" valid=\"1\" msgid=\"14\" payTrackMonth=\"1\" payTrackPrice=\"200\" payAlbumPrice=\"0\" trySize=\"960887\" tryBegin=\"0\" tryEnd=\"0\" switch=\"636675\" alert=\"2\" payPlay=\"0\" payDownload=\"1\" payStatus=\"0\" strMediaMid=\"002COmzJ0SPZMl\" size128=\"4033092\" size320=\"10082424\" sizeape=\"0\" sizeflac=\"26157700\" sizeogg=\"5387136\" dtssize=\"0\"> <![CDATA[]]> </content> \n" +
+                   "    </qqcmd> \n" +
+                   "  </cmd> \n" +
+                   "</command-lable-xwl78-qq-music>\n";
+
+        Document document = DocumentHelper.parseText(xml);
+
+        Element document1 = (Element) document.selectSingleNode("//qqcmd/content");
+
+//        strMediaMid="002COmzJ0SPZMl" size128="4033092" size320="10082424" sizeape="0" sizeflac="26157700" sizeogg="5387136"
+
+        System.out.println(document1.attributeValue("musicid"));
+        System.out.println(document1.attributeValue("strMediaMid"));
+        System.out.println(document1.attributeValue("size128"));
+        System.out.println(document1.attributeValue("size320"));
+        System.out.println(document1.attributeValue("sizeape"));
+        System.out.println(document1.attributeValue("sizeflac"));
+        System.out.println(document1.attributeValue("sizeogg"));
+
+    }
+
+    public static  void picTest() throws FileNotFoundException, DocumentException {
         String xml = "<command-lable-xwl78-qq-music>\n" +
                 "  <cmd value=\"1057\" verson=\"729\">\n" +
                 "    <result retcode=\"0\">0</result>\n" +
@@ -57,13 +88,5 @@ public class XmlTest {
         System.out.println(node.getText());
         System.out.println(node1.getText());
 
-
-//        Element e = (Element) ;
-//        Object o = doc.selectObject("//url/@a_sl");
-//        System.out.println(e.getText());
-//        Element root = doc.getRootElement();
-//
-//
-//        System.out.println(root.asXML());
     }
 }

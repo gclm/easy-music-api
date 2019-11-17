@@ -2,6 +2,7 @@ package club.gclmit.chaos.music.service;
 
 import club.gclmit.chaos.music.model.pojo.Pic;
 import club.gclmit.chaos.music.model.pojo.Song;
+import club.gclmit.chaos.music.model.pojo.SongQuality;
 import club.gclmit.chaos.music.model.pojo.TopList;
 import org.dom4j.DocumentException;
 
@@ -33,6 +34,22 @@ public interface TencentMusicService {
      *  获取榜单信息
      */
     public List<TopList> getTopList();
+
+
+    /**
+     *  获取 vkey
+     */
+    public String getPurl(String songmid);
+
+    /**
+     *  获取 vkey
+     */
+    public String getOggVkey(String songmid);
+
+    /**
+     * 获取歌曲链接
+     */
+    public String getMusicUrl(String songmid,String size);
 
     /**
      * 获取歌单
@@ -68,4 +85,6 @@ public interface TencentMusicService {
      * 用户头像
      */
     public Map<String,String> userHeadImg(String number);
+
+    public SongQuality getSongSize(String songId) throws DocumentException;
 }
