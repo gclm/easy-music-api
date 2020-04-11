@@ -1,3 +1,3 @@
-# chaos-music-api
+# easy-music-api
 音乐 API
 
